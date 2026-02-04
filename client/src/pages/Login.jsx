@@ -59,7 +59,7 @@ const Login = () => {
               Login
             </h2>
             <p className="text-center text-base-content/70 mb-6">
-              Welcome back 👋
+              Welcome back , Let's Chit-Chat👋
             </p>
 
             {/* Form */}
