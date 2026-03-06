@@ -29,6 +29,7 @@ export const UserRegister = async (req, res, next) => {
       email,
       mobileNumber,
       password: hashedPassword,
+      type: "regular",
     });
 
     res.status(201).json({ message: "Registration successful" });
@@ -37,7 +38,6 @@ export const UserRegister = async (req, res, next) => {
   }
 };
 
-// ================= LOGIN =================
 export const UserLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -54,7 +54,6 @@ export const UserLogin = async (req, res, next) => {
       error.statusCode = 400;
       return next(error);
     }
-
     const isPasswordMatch = await bcrypt.compare(
       password,
       existingUser.password,
@@ -82,3 +81,4 @@ export const UserLogout = async (req, res, next) => {
   }
 };
 
+//Google Login//

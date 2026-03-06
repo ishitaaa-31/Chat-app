@@ -13,11 +13,19 @@ const userSchema = new mongoose.Schema(
     },
     mobileNumber: {
       type: String,
-      required: true,
+     
+    },
+    googleId:{
+      type:String,
+    },
+    userType:{
+      type:String,
+      enum:["google","regular","hybrid"],
+      required:true,
     },
     password: {
       type: String,
-      required: true,
+      
     },
   },
   { timestamps: true }

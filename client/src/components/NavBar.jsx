@@ -12,7 +12,7 @@ const NavBar = () => {
     document.documentElement.setAttribute("data-theme", event.target.value);
   };
   useEffect(() => {
-    const currentTheme = localStorage.getItem("chatKaroTheme");
+    const currentTheme = localStorage.getItem("chit-chatTheme");
     document.documentElement.setAttribute("data-theme", currentTheme);
     setTheme(currentTheme);
   }, []);
