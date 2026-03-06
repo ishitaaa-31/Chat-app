@@ -29,7 +29,7 @@ export const UserRegister = async (req, res, next) => {
       email,
       mobileNumber,
       password: hashedPassword,
-      type: "regular",
+       userType: "regular",
     });
 
     res.status(201).json({ message: "Registration successful" });
