@@ -4,11 +4,13 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 dotenv.config();
 import AuthRouter from "../server/routers/authRouter.js"
+import UserRouter from "./src/routers/userRouter.js";
 
 const app = express();
 app.use(cors({ origin: "http://localhost:5173", credentials:true}));
 app.use(express.json());
 app.use("/auth", AuthRouter);
+app.use("/user", UserRouter);
 
 
 
