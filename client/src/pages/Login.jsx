@@ -2,15 +2,38 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../config/api";
 import { useNavigate } from "react-router-dom";
-import { useGoogleAuth } from "../config/googleAuth";
+import { useGoogleAuth } from "../config/GoogleAuth";
 import { FcGoogle } from "react-icons/fc";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser, setIsLogin } = useAuth();
+
   const { isLoading, error, isInitialized, signInWithGoogle } = useGoogleAuth();
 
   const handleGoogleSuccess = async (userData) => {
     console.log("Google Login Data", userData);
+    setLoading(true);
+    try {
+      const res = await api.post("/auth/googleLogin", userData);
+
+      toast.success(res.data.message);
+
+      // optional: store user or token
+      sessionStorage.setItem("AppUser", JSON.stringify(res.data.data));
+      setUser(res.data.data);
+      setIsLogin(true);
+      handleClearForm();
+
+      // simple redirect
+      navigate("/chatting");
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const GoogleLogin = () => {
@@ -49,7 +72,8 @@ const Login = () => {
 
       // optional: store user or token
       sessionStorage.setItem("AppUser", JSON.stringify(res.data.data));
-
+      setUser(res.data.data);
+      setIsLogin(true);
       handleClearForm();
 
       // simple redirect
@@ -72,7 +96,7 @@ const Login = () => {
               Login
             </h2>
             <p className="text-center text-base-content/70 mb-6">
-              Welcome back , Let's Chit-Chat👋
+              Welcome back 👋
             </p>
 
             {/* Form */}
@@ -117,10 +141,11 @@ const Login = () => {
                   disabled={Loading}
                   className="btn btn-primary flex-1"
                 >
-                  {isLoading ? "Logging in..." : "Login"}
+                  {Loading ? "Logging in..." : "Login"}
                 </button>
               </div>
             </form>
+
             {/* Google Login button */}
 
             <div className="mt-4">
