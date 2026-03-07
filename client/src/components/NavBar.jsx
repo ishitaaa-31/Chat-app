@@ -1,58 +1,73 @@
-import React from "react";
-import { useEffect } from "react";
-import { BsChatSquareHeart } from "react-icons/bs";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate,Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 const NavBar = () => {
+  const { user, isLogin } = useAuth();
   const [theme, setTheme] = useState("light");
+
   const navigate = useNavigate();
+
   const handleThemeChange = (event) => {
-    setTheme(event.target.value);
-    localStorage.setItem("chit-chatTheme", event.target.value);
-    document.documentElement.setAttribute("data-theme", event.target.value);
+    const selectedTheme = event.target.value;
+    setTheme(selectedTheme);
+    localStorage.setItem("chit-chatTheme", selectedTheme);
+    document.documentElement.setAttribute("data-theme", selectedTheme);
   };
+
   useEffect(() => {
-    const currentTheme = localStorage.getItem("chit-chatTheme");
-    document.documentElement.setAttribute("data-theme", currentTheme);
-    setTheme(currentTheme);
+    const savedTheme = localStorage.getItem("chit-chatTheme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+    setTheme(savedTheme);
   }, []);
+
   return (
-    <>
-      <div className="bg-primary flex justify-between px-5 py-2  z-99">
-        <h1 className="text-xl font-bold">
-          <div className="flex  gap-1">
-            <span>Chit-Chat</span>
-            <span  ><BsChatSquareHeart className="h-8" /></span>
-          </div>
+    <nav className="bg-primary px-6 py-3 shadow-md">
+      <div className="flex items-center justify-between max-w-7xl mx-auto">
+        {/* Logo */}
+        <h1 className="text-2xl font-extrabold tracking-wide cursor-pointer">
+          Data-Transfer
         </h1>
-        <div className="flex gap-3 font-bold text-lg ms-40">
-          <span>Home</span>
-          <span>About</span>
+
+        {/* Links */}
+        <div className="hidden md:flex gap-6 text-sm font-medium">
+          <Link to="/chatting"> Chat </Link>
         </div>
 
-        <div className="flex gap-3">
-          <button
-            className="btn btn-secondary btn-gradient"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </button>
+        {/* Actions */}
+        <div className="flex items-center gap-3">
+          {isLogin ? (
+            <div
+              className="flex items-center gap-3 cursor-pointer p-1 border border-primary hover:border-primary-content rounded-md transition"
+              onClick={() => navigate("/userDashboard")}
+            >
+              <span className="text-nowrap text-lg font-semibold">
+                Welcome,{" "}
+                {user?.fullName.split(" ")[0] || user?.email.split("@")[0]}
+              </span>
+            </div>
+          ) : (
+            <>
+              <button
+                className="btn-secondary1"
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </button>
 
-          <button
-            className="btn btn-secondary btn-gradient"
-            onClick={() => navigate("/register")}
-          >
-            Register
-          </button>
-
+              <button
+                className="btn btn-outline btn-sm px-5"
+                onClick={() => navigate("/register")}
+              >
+                Register
+              </button>
+            </>
+          )}
           <select
-            name="theme"
-            id="theme"
-            className="select"
+            className="select select-bordered select-sm max-w-32"
             onChange={handleThemeChange}
             value={theme}
           >
-            <option value="">Default</option>
             <option value="light">Light</option>
             <option value="dark">Dark</option>
             <option value="claude">Claude</option>
@@ -73,7 +88,7 @@ const NavBar = () => {
           </select>
         </div>
       </div>
-    </>
+    </nav>
   );
 };
 
